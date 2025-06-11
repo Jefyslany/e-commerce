@@ -2,140 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Order Placed</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <title>Your Cart</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 30px;
-      background-color: #f4f9fb;
-    }
-
-    h1 {
-      color: #2c3e50;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .success {
-      text-align: center;
-      color: #27ae60;
-      font-size: 24px;
-      margin-bottom: 30px;
-    }
-
-    .success i {
-      font-size: 48px;
-      margin-bottom: 10px;
-      color: #2ecc71;
-    }
-
-    #cart-items {
-      max-width: 800px;
-      margin: 0 auto;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .item {
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid #eee;
-      padding: 15px 0;
-    }
-
-    .item:last-child {
-      border-bottom: none;
-    }
-
-    .item img {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      margin-right: 20px;
-      border-radius: 8px;
-    }
-
-    .item-details {
-      flex: 1;
-    }
-
-    .item-details strong {
-      font-size: 18px;
-    }
-
-    .total {
-      text-align: right;
-      font-size: 20px;
-      margin-top: 20px;
-      font-weight: bold;
-    }
-
-    .nav-buttons {
-      text-align: center;
-      margin-top: 30px;
-    }
-
-    .nav-buttons a {
-      text-decoration: none;
-      color: white;
-      background-color: #3498db;
-      padding: 12px 25px;
-      border-radius: 6px;
-      margin: 10px;
-      display: inline-block;
-    }
-
-    .nav-buttons a:hover {
-      background-color: #2980b9;
-    }
+    body { font-family: Arial; padding: 20px; background: #f9f9f9; }
+    .item { margin-bottom: 10px; }
+    button { background: #007bff; color: white; border: none; padding: 10px; cursor: pointer; }
   </style>
 </head>
 <body>
-  <h1>Order Confirmation</h1>
-  <div class="success">
-    <i class="fas fa-check-circle"></i><br>
-    Your order has been placed successfully!
-  </div>
+  <h1>Your Cart</h1>
+  <div id="cart-items"></div>
+  <p id="total"></p>
+  <button onclick="placeOrder()">Place Order</button>
+  <script>
+    const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+    const container = document.getElementById("cart-items");
+    let total = 0;
 
-  <div id="cart-items">
-    <div class="item">
-      <img src="https://via.placeholder.com/80" alt="Wireless Headphones">
-      <div class="item-details">
-        <strong>Wireless Headphones</strong><br>
-        Quantity: 1<br>
-        Price: $59.99
-      </div>
-    </div>
-    <div class="item">
-      <img src="https://via.placeholder.com/80" alt="Smart Watch">
-      <div class="item-details">
-        <strong>Smart Watch</strong><br>
-        Quantity: 1<br>
-        Price: $149.99
-      </div>
-    </div>
-    <div class="item">
-      <img src="https://via.placeholder.com/80" alt="USB-C Charger">
-      <div class="item-details">
-        <strong>USB-C Charger</strong><br>
-        Quantity: 2<br>
-        Price: $19.99 each
-      </div>
-    </div>
-    <div class="total">
-      Total: $249.96
-    </div>
-  </div>
+    if (cartItems.length === 0) {
+      container.innerHTML = "<p>Your cart is empty.</p>";
+      document.querySelector("button").style.display = "none";
+    } else {
+      cartItems.forEach(item => {
+        container.innerHTML += `<div class="item"><strong>${item.name}</strong> - ₹${item.price}</div>`;
+        total += item.price;
+      });
+      document.getElementById("total").innerText = `Total: ₹${total}`;
+    }
 
-  <div class="nav-buttons">
-    <a href="home.html"><i class="fas fa-home"></i> Back to Home</a>
-    <a href="orders.html"><i class="fas fa-box"></i> View Orders</a>
-  </div>
-
-  <script src="script.js"></script>
+    function placeOrder() {
+      localStorage.setItem("order", JSON.stringify(cartItems));
+      localStorage.removeItem("cart");
+      window.location.href = "order-confirmation.html";
+    }
+  </script>
 </body>
 </html>
